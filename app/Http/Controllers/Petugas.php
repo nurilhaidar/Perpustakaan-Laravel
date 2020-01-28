@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use App\ModelPetugas;
 
 class Petugas extends Controller
 {
@@ -78,5 +79,46 @@ class Petugas extends Controller
         }
 
         return response()->json(compact('user'));
+    }
+
+    public function edit($id,Request $req){
+        $validator=Validator::make($req->all(),
+            [
+                'nama_petugas'=>'required',
+                'alamat'=>'required',
+                'telp'=>'required',
+                'username'=>'required',
+                'password'=>'required',
+                'level'=>'required',
+            ]
+        );
+
+        if($validator -> fails()){
+            return Response()->json($validator->errors());
+        }
+
+        $ubah = ModelPetugas::where('id_petugas',$id)->update([
+            'nama_petugas'=>$req->nama_petugas,
+            'alamat'=>$req->alamat,
+            'telp'=>$req->telp,
+            'username'=>$req->username,
+            'password'=>$req->password,
+            'level'=>$req->level,
+        ]);
+
+        if($ubah){
+            return Response()->json(['status'=>1]);
+        } else {
+            return Response()->json(['status'=>0]);
+        }
+    }
+
+    public function destroy($id){
+        $hapus=ModelSiswa::where('id_petugas',$id)->delete();
+        if($hapus){
+            return Response()->json(['status'=>1]);
+        } else {
+            return Response()->json(['status'=>0]);
+        }
     }
 }
