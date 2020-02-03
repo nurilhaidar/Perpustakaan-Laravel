@@ -86,4 +86,3 @@ class Buku extends Controller
         }
     }
 }
-
